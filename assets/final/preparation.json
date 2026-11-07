@@ -1,0 +1,122 @@
+[
+  {
+    "file": "road_straight.glb",
+    "source": "large_modular_pack_of_russian_roads.glb",
+    "bytes": 1004428,
+    "triangles": 2,
+    "primitives": 1,
+    "size_units": [
+      2.0,
+      3.2584134146418364e-07,
+      2.0
+    ],
+    "source_sha256": "473ca14987f6fdfda62ccd621e0ce1690ad31cd72188fff4784c9f71754e56ca",
+    "credit": {
+      "author": "Unka II (https://sketchfab.com/UnkaII)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/large-modular-pack-of-russian-roads-9fd19243e4fe4ddaaa627551477a9e27",
+      "title": "Large modular pack of Russian roads",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  },
+  {
+    "file": "charger_low.glb",
+    "source": "simple_low_poly_ev_charging_station.glb",
+    "bytes": 91052,
+    "triangles": 2260,
+    "primitives": 11,
+    "size_units": [
+      3.428952217102051,
+      5.438273906707764,
+      2.0
+    ],
+    "source_sha256": "ce051880c33162abcc6e9695421718c92e8c6efdcf52177b179aee036a7e039e",
+    "credit": {
+      "author": "BarrySArt (https://sketchfab.com/BarrySArt)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/simple-low-poly-ev-charging-station-e3447d40fc3646898768a1c1ccd79956",
+      "title": "Simple Low Poly EV Charging Station",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  },
+  {
+    "file": "campus_shelter.glb",
+    "source": "ev_charging_station_a (1).glb",
+    "bytes": 910792,
+    "triangles": 26549,
+    "primitives": 20,
+    "size_units": [
+      2.3653039932250977,
+      2.625906229019165,
+      2.820857048034668
+    ],
+    "source_sha256": "48522b05d829b8d05a647104720e900e7d59f8d9fc62776ab7ef117d66464178",
+    "credit": {
+      "author": "Kirk (https://sketchfab.com/khekwei)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/ev-charging-station-a-aa2af6b5d2f54ac395cfc7e132f25282",
+      "title": "EV Charging Station A",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  },
+  {
+    "file": "charger_detail.glb",
+    "source": "ev_charging_station.glb",
+    "bytes": 1729496,
+    "triangles": 65486,
+    "primitives": 1,
+    "size_units": [
+      25.333101272583008,
+      50.13059997558594,
+      27.158300399780273
+    ],
+    "source_sha256": "1cc6cc0807cf1400f40f00b5a6279fe44d98b37c06e8a6c3f6043fb2351e6b14",
+    "credit": {
+      "author": "np-dev (https://sketchfab.com/np-dev)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/ev-charging-station-d89eab4c0ffe440db1d126a050e9a0c9",
+      "title": "EV Charging Station",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  },
+  {
+    "file": "guardrail_straight.glb",
+    "source": "guardrail_and_terminal.glb",
+    "bytes": 1109340,
+    "triangles": 1704,
+    "primitives": 1,
+    "size_units": [
+      3.9999990463256836,
+      1.0638242959976196,
+      0.388427734375
+    ],
+    "source_sha256": "73f136c7b826f35f5ca0bcbb6176517a25ef1f56ed9a20aa028641993ebafb8a",
+    "credit": {
+      "author": "xplanepilot (https://sketchfab.com/xplanepilot)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/guardrail-and-terminal-693dee3dc6a1495f90ab0ba1f8237cb4",
+      "title": "GuardRail and Terminal",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  },
+  {
+    "file": "guardrail_terminal.glb",
+    "source": "guardrail_and_terminal.glb",
+    "bytes": 1085948,
+    "triangles": 1232,
+    "primitives": 1,
+    "size_units": [
+      0.9737615585327148,
+      1.0941581726074219,
+      0.388427734375
+    ],
+    "source_sha256": "73f136c7b826f35f5ca0bcbb6176517a25ef1f56ed9a20aa028641993ebafb8a",
+    "credit": {
+      "author": "xplanepilot (https://sketchfab.com/xplanepilot)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/guardrail-and-terminal-693dee3dc6a1495f90ab0ba1f8237cb4",
+      "title": "GuardRail and Terminal",
+      "preparation": "Static transforms baked; ground-centred; selected parts; textures limited to 512px. Original attribution retained."
+    }
+  }
+]

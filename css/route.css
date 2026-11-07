@@ -1,0 +1,94 @@
+.drive-route-strip{position:absolute;z-index:3;top:12px;right:14px;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;width:max-content;max-width:calc(100% - 205px);padding:0;border:0;background:transparent;color:#f3fbff;font-size:11px;pointer-events:none;text-shadow:0 1px 3px #071b2bd9}.drive-route-map{width:150px;flex-shrink:0}.drive-route-map b{font-size:11px;font-weight:600}.drive-route-map svg{display:block;width:100%;height:25px}.route-navigation-points,.route-dot{visibility:visible;opacity:1}.drive-route-readings{display:flex;align-items:center;font-variant-numeric:tabular-nums}.drive-route-readings [hidden]{display:none!important}.drive-route-actions{display:flex;align-items:center;gap:4px;margin:0;padding:0;pointer-events:auto}.drive-route-actions[hidden]{display:none!important}.drive-route-actions select,.drive-route-actions button{box-sizing:border-box;height:29px;margin:0;padding:4px 7px;border:1px solid #d1eaf338;border-radius:6px;background:rgba(14,35,48,.28);color:#f2fbff;font-size:10px;line-height:1.2;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 1px 4px #0816241a;text-shadow:0 1px 2px #091d2c80}.drive-route-actions select{width:148px;max-width:148px}.drive-route-actions option{background:#173344;color:#f2fbff;text-shadow:none}.drive-route-actions button:hover:not(:disabled){background:rgba(23,61,74,.5);border-color:#d4fff180}.drive-route-actions button:focus-visible,.drive-route-actions select:focus-visible{outline:2px solid #93e8d2;outline-offset:2px}.drive-route-actions button:disabled{opacity:.4}.run-buttons{flex-wrap:wrap}.run-buttons #route-start{font-size:10px;background:#174d4c;color:#c5fff0;border:1px solid #438886}.drive-title{padding:12px 16px}.drive-title .eyebrow,.drive-title h1 span{display:none}.shell.route-inline-charging .drive-control-panel{display:flex!important}.shell.route-inline-charging .drive-cameras{display:flex!important}.shell.route-inline-charging #drive-state{display:inline-block!important}.shell.route-inline-charging .drive-hud{display:block!important}.shell.route-inline-charging .drive-telemetry{display:grid!important}@media(max-width:700px){.drive-route-strip{top:9px;left:12px;right:12px;width:auto;max-width:none;gap:5px}.drive-route-map{width:135px}.drive-route-actions select{width:128px;max-width:128px}.drive-route-actions select,.drive-route-actions button{height:27px;font-size:9px;padding:4px 6px}.drive-hud{top:88px!important}}
+
+/* H5.9: the entire card is a viewport; controls float without layout rows. */
+.drive-scene-card{position:relative}
+.drive-stage{flex:1 1 0;min-height:0;height:100%}
+.drive-cameras{position:absolute;z-index:4;top:10px;left:12px;display:flex;gap:6px;align-items:center;justify-content:flex-start;padding:0;border:0;background:transparent}
+.drive-cameras>span{font-size:8px;letter-spacing:.07em;color:#e2f4fa;text-shadow:0 1px 3px #071b2b}
+.drive-cameras>div{gap:4px;flex-wrap:nowrap}
+.drive-cameras button{height:27px;padding:4px 7px;font-size:9px;color:#edfaff;border:1px solid #d1eaf338;background:#0e233048;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.drive-cameras button.active{background:#17454a70;border-color:#88e7d280;color:#aaffed}
+.drive-cameras button:focus-visible{outline:2px solid #93e8d2;outline-offset:2px}
+.drive-route-strip{top:10px;max-width:calc(100% - 265px)}
+.drive-route-actions{flex-wrap:wrap;justify-content:flex-end}
+.drive-hud{top:auto!important;bottom:42px;left:12px;padding:9px 12px;background:#081c2f75;backdrop-filter:blur(4px)}
+.drive-scene-caption{display:none}
+.drive-side-head .drive-state{display:inline-block;margin-top:8px;font-size:8px;padding:4px 6px}
+.energy-label-control{display:none;position:absolute;z-index:4;right:12px;bottom:12px;border:1px solid #d1eaf338;border-radius:6px;padding:6px 8px;color:#edfaff;background:#0e233048;font-size:10px}
+.shell.energy-active:not(.battery-active) .energy-label-control{display:block}
+@media(max-width:700px){.drive-route-strip{top:44px;left:12px;right:12px;max-width:none;width:auto}.drive-cameras{top:9px;left:10px}.drive-hud{bottom:12px;left:10px;padding:7px 10px}.drive-hud strong{font-size:28px}.drive-cameras>span{display:none}}
+/* One destination status for Driving and Energy; no additional scene or menu. */
+.drive-destination{position:absolute;left:50%;top:74px;transform:translateX(-50%);z-index:12;padding:8px 16px;border:1px solid #d4f3ff55;border-radius:20px;background:#12314099;backdrop-filter:blur(10px);color:#edfcff;font-size:14px;pointer-events:none;white-space:nowrap}
+.drive-destination[hidden]{display:none}
+
+/* H5.14.1: navigation and energy state occupy separate, content-sized rows.
+   The canvas stays full size behind the overlays; no render/input changes. */
+.shell.energy-active:not(.battery-active) .drive-stage{
+  display:grid;
+  grid-template-rows:auto auto minmax(0,1fr);
+  row-gap:8px;
+}
+.shell.energy-active:not(.battery-active) .drive-stage > #scene-canvas{
+  position:absolute;
+  inset:0;
+}
+.shell.energy-active:not(.battery-active) .drive-route-strip{
+  position:relative;
+  top:auto;
+  right:auto;
+  left:auto;
+  grid-row:1;
+  justify-self:end;
+  align-self:start;
+  margin:10px 14px 0;
+}
+.shell.energy-active:not(.battery-active) .energy-overview{
+  position:relative;
+  top:auto;
+  right:auto;
+  left:auto;
+  grid-row:2;
+  justify-self:end;
+  align-self:start;
+  max-width:calc(100% - 28px);
+  margin:0 14px;
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+@media(max-width:700px){
+  .shell.energy-active:not(.battery-active) .drive-route-strip{
+    width:auto;
+    max-width:none;
+    justify-self:stretch;
+    margin:44px 12px 0;
+  }
+  .shell.energy-active:not(.battery-active) .energy-overview{
+    max-width:calc(100% - 24px);
+    margin:0 12px;
+  }
+}
+
+/* H5.15 collision status: no timers, input capture or layout row. */
+.drive-collision-notice{position:absolute;z-index:15;bottom:14px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);padding:9px 14px;border:1px solid #e8997c80;border-radius:8px;background:#321c23df;color:#ffe7db;font-size:12px;text-align:center;pointer-events:none}
+.drive-collision-notice[hidden]{display:none}
+
+/* H5.16: Thermal shares Energy's HUD rows and full-size road canvas. */
+.thermal-legend{position:relative;z-index:3;grid-row:2;justify-self:end;align-self:start;width:260px;max-width:calc(100% - 28px);margin:0 14px;padding:8px 10px;background:#071b2dd9;border:1px solid #78bbc455;border-radius:7px;color:#d9edf1;pointer-events:none}
+.thermal-legend[hidden]{display:none}
+.thermal-legend strong{font-size:9px;letter-spacing:.06em}
+.thermal-color-ramp{height:7px;margin:6px 0 3px;border-radius:4px;background:linear-gradient(90deg,#3d7fff 0%,#31d8c5 26.923%,#ffcf50 53.846%,#ff8045 76.923%,#f04b61 100%)}
+.thermal-scale-labels{display:flex;justify-content:space-between;font-size:8px;font-variant-numeric:tabular-nums}
+.thermal-legend small{display:block;font-size:8px;color:#acc2cf;margin-top:4px}
+.thermal-legend i{display:inline-block;width:8px;height:8px;background:#77818e;margin-right:4px}
+#thermal-inspector strong{display:block;font-size:18px;margin:6px 0;font-variant-numeric:tabular-nums}
+#thermal-inspector p{margin:6px 0}#thermal-inspector small{font-size:9px;overflow-wrap:anywhere}
+#thermal-panel [data-thermal-inspect].active{border-color:#65eade;background:#164852;color:#e5ffff}
+.shell.thermal-active #energy-panel,.shell.thermal-active #energy-overview,.shell.thermal-active .energy-label-control{display:none!important}
+@media(max-width:700px){.thermal-legend{margin:0 12px;max-width:calc(100% - 24px);width:240px}}
+
+.thermal-legend[data-colored="false"] .thermal-color-ramp{opacity:.2}
+
+/* H5.17: contextual guidance occupies the bottom edge, away from route/energy HUD. */
+.service-area-notice{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;max-width:58%;padding:7px 12px;border:1px solid #c9eee333;border-radius:7px;background:#102936b8;backdrop-filter:blur(5px);color:#e6f9f4;font-size:12px;text-align:center;pointer-events:none}
+.service-area-notice[data-ready="true"]{color:#a0ffd4;border-color:#7cf4bd88}.service-area-notice[hidden]{display:none!important}
+@media(max-width:700px){.service-area-notice{bottom:13px;left:auto;right:10px;transform:none;max-width:55%;font-size:10px}}

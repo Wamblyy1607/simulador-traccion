@@ -1,0 +1,363 @@
+[
+  {
+    "file": "pine_variants_lod.glb",
+    "source": "pine_sapling_small_1k.gltf",
+    "source_sha256": "f358c01926861dd082f32dba60f7c9fba232b585a985cf38c0d2229eecf4bc48",
+    "bytes": 21548312,
+    "groups": [
+      {
+        "name": "pine_sapling_small_b_lod0",
+        "triangles": 122235
+      },
+      {
+        "name": "pine_sapling_small_b_lod1",
+        "triangles": 4
+      },
+      {
+        "name": "pine_sapling_small_a_lod0",
+        "triangles": 142506
+      },
+      {
+        "name": "pine_sapling_small_a_lod1",
+        "triangles": 4
+      },
+      {
+        "name": "pine_sapling_small_c_lod0",
+        "triangles": 133403
+      },
+      {
+        "name": "pine_sapling_small_c_lod1",
+        "triangles": 4
+      }
+    ],
+    "credit": {
+      "preparation": "Source transforms baked; metres; 1K PBR; user supplied. No new license granted."
+    }
+  },
+  {
+    "file": "rocky_ground_material.glb",
+    "source": "rocky_terrain_02_1k.gltf",
+    "source_sha256": "e605964f9ca1b87ddcc3882b51c1be07f1ab18b41ac9299f3171d2aef011af92",
+    "bytes": 941508,
+    "groups": [
+      {
+        "name": "rocky_material_carrier",
+        "triangles": 2
+      }
+    ],
+    "credit": {
+      "preparation": "Source transforms baked; metres; 1K PBR; user supplied. No new license granted."
+    }
+  },
+  {
+    "file": "basement_garage.glb",
+    "source": "basement_parking_garage_environment_underground.glb",
+    "source_sha256": "07ff3f83120cf0e8c1300d82db764f22dac7faf0a6d80a65ab826c3252af0422",
+    "bytes": 6184368,
+    "groups": [
+      {
+        "name": "garage_part_0",
+        "triangles": 137
+      },
+      {
+        "name": "garage_part_1",
+        "triangles": 8
+      },
+      {
+        "name": "garage_part_2",
+        "triangles": 1428
+      },
+      {
+        "name": "garage_part_3",
+        "triangles": 1428
+      },
+      {
+        "name": "garage_part_4",
+        "triangles": 12
+      },
+      {
+        "name": "garage_part_5",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_6",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_7",
+        "triangles": 460
+      },
+      {
+        "name": "garage_part_8",
+        "triangles": 12
+      },
+      {
+        "name": "garage_part_9",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_10",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_11",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_12",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_13",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_14",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_15",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_16",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_17",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_18",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_19",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_20",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_21",
+        "triangles": 44
+      },
+      {
+        "name": "garage_part_22",
+        "triangles": 44
+      },
+      {
+        "name": "garage_part_23",
+        "triangles": 16
+      },
+      {
+        "name": "garage_part_24",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_25",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_26",
+        "triangles": 44
+      },
+      {
+        "name": "garage_part_27",
+        "triangles": 12
+      },
+      {
+        "name": "garage_part_28",
+        "triangles": 22
+      },
+      {
+        "name": "garage_part_29",
+        "triangles": 26070
+      },
+      {
+        "name": "garage_part_30",
+        "triangles": 304
+      },
+      {
+        "name": "garage_part_31",
+        "triangles": 216
+      },
+      {
+        "name": "garage_part_32",
+        "triangles": 442
+      },
+      {
+        "name": "garage_part_33",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_34",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_35",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_36",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_37",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_38",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_39",
+        "triangles": 124
+      },
+      {
+        "name": "garage_part_40",
+        "triangles": 28
+      },
+      {
+        "name": "garage_part_41",
+        "triangles": 28
+      },
+      {
+        "name": "garage_part_42",
+        "triangles": 28
+      },
+      {
+        "name": "garage_part_43",
+        "triangles": 28
+      },
+      {
+        "name": "garage_part_44",
+        "triangles": 28
+      },
+      {
+        "name": "garage_part_45",
+        "triangles": 59
+      },
+      {
+        "name": "garage_part_46",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_47",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_48",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_49",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_50",
+        "triangles": 2
+      },
+      {
+        "name": "garage_part_51",
+        "triangles": 6
+      },
+      {
+        "name": "garage_part_52",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_53",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_54",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_55",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_56",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_57",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_58",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_59",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_60",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_61",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_62",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_63",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_64",
+        "triangles": 24
+      },
+      {
+        "name": "garage_part_65",
+        "triangles": 20
+      },
+      {
+        "name": "garage_part_66",
+        "triangles": 1428
+      },
+      {
+        "name": "garage_part_67",
+        "triangles": 1428
+      },
+      {
+        "name": "garage_part_68",
+        "triangles": 14
+      },
+      {
+        "name": "garage_part_69",
+        "triangles": 14
+      },
+      {
+        "name": "garage_part_70",
+        "triangles": 2608
+      },
+      {
+        "name": "garage_part_71",
+        "triangles": 11712
+      },
+      {
+        "name": "garage_part_72",
+        "triangles": 2608
+      },
+      {
+        "name": "garage_part_73",
+        "triangles": 11712
+      }
+    ],
+    "credit": {
+      "author": "PolyNeast (https://sketchfab.com/polyNeast)",
+      "license": "SKETCHFAB Standard (https://sketchfab.com/licenses)",
+      "source": "https://sketchfab.com/3d-models/basement-parking-garage-environment-underground-1ce0cc998a654a408d25832ab620a5d1",
+      "title": "Basement Parking Garage Environment Underground",
+      "preparation": "Source transforms baked; metres; 1K PBR; user supplied. No new license granted."
+    }
+  }
+]

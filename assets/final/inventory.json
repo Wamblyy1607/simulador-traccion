@@ -1,0 +1,111 @@
+{
+  "version": "H5.11",
+  "new_lot_evaluation": [
+    [
+      "monochrome_studio_02_2k.hdr",
+      "Aprobado",
+      "2K neutro; ilumina los módulos técnicos sin mostrar softboxes."
+    ],
+    [
+      "immenstadter_horn_2k.hdr",
+      "Aprobado",
+      "2K exterior; fondo lejano de montaña, no reconstrucción geográfica de CDMX–Puebla."
+    ],
+    [
+      "guardrail_and_terminal.glb",
+      "Aprobado",
+      "2936 triángulos; extraídos tramo y terminal, texturas a 512, instancias."
+    ],
+    [
+      "ev_charging_station.glb",
+      "Aprobado con adaptación",
+      "65486 triángulos en una primitiva; escala corregida y material neutro, solo cerca de S2 o en recarga DC50."
+    ],
+    [
+      "ev_charger.glb",
+      "Descartado",
+      "532242 triángulos y 25.9 MB; coste desproporcionado para un cargador secundario."
+    ],
+    [
+      "landscape_forest__mountains.glb",
+      "Descartado como conjunto",
+      "18600 triángulos repartidos entre 3687 mallas; incluye cúpula y composición cerrada, sin corredor integrado a la ruta."
+    ]
+  ],
+  "approved_inventory": [
+    {
+      "source": "immenstadter_horn_2k.hdr",
+      "files": [
+        "mountain_2k.hdr"
+      ],
+      "section": "Conducción: Paisaje exterior > Montaña (predeterminado)",
+      "use": "Fondo y reflejos HDR; terreno cercano sigue siendo 3D."
+    },
+    {
+      "source": "citrus_orchard_road_puresky_2k.hdr",
+      "files": [
+        "citrus_sky_2k.hdr"
+      ],
+      "section": "Conducción: Paisaje exterior > Cielo abierto",
+      "use": "Alternativa de cielo y reflejos; también durante las paradas del viaje."
+    },
+    {
+      "source": "DayEnvironmentHDRI110_2K.zip",
+      "files": [
+        "day_campus_2k.exr"
+      ],
+      "section": "Recurso conservado, inactivo por restauración H5.9",
+      "use": "Recarga vuelve a 02_recarga_campus.webp."
+    },
+    {
+      "source": "monochrome_studio_02_2k.hdr",
+      "files": [
+        "monochrome_studio_2k.hdr"
+      ],
+      "section": "Vehicle Explorer, Energy Flow, Battery Explorer y Térmica",
+      "use": "Fondo visible y reflejos de estudio en las cuatro vistas técnicas, con imagen de respaldo."
+    },
+    {
+      "source": "large_modular_pack_of_russian_roads.glb",
+      "files": [
+        "road_straight.glb"
+      ],
+      "section": "Carretera del visor de conducción",
+      "use": "Tramo recto de 2 triángulos, repetido mediante 24 instancias; catálogo restante excluido."
+    },
+    {
+      "source": "guardrail_and_terminal.glb",
+      "files": [
+        "guardrail_straight.glb",
+        "guardrail_terminal.glb"
+      ],
+      "section": "Laterales de la carretera",
+      "use": "Hasta 60 tramos y 4 terminales instanciados; apertura en el lado de las estaciones."
+    },
+    {
+      "source": "simple_low_poly_ev_charging_station.glb",
+      "files": [
+        "charger_low.glb"
+      ],
+      "section": "S1 y S3 durante el viaje",
+      "use": "Recarga utiliza de nuevo los pedestales H5.9 con cable dinámico."
+    },
+    {
+      "source": "ev_charging_station.glb",
+      "files": [
+        "charger_detail.glb"
+      ],
+      "section": "S2, al aproximarse a la estación",
+      "use": "Geometría corregida a 1.95 m; la recarga DC50 conserva la carcasa y cable dinámicos H5 para evitar duplicación de la manguera."
+    },
+    {
+      "source": "ev_charging_station_a (1).glb",
+      "files": [
+        "campus_shelter.glb"
+      ],
+      "section": "Mobiliario de S3 en el viaje",
+      "use": "La marquesina de recarga libre añadida en H5.10 se desactiva."
+    }
+  ],
+  "release_notes": "Estudio visible; Recarga libre restaurada a H5.9; parada asistida solicitada. Véase LEEME_H5_11.md."
+}

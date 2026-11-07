@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1324" />
+  <meta name="description" content="BEV Digital Twin: explorador 3D y simulador académico de conducción longitudinal." />
+  <title>BEV Digital Twin — Accesos continuos y X-Ray H5.18</title>
+  <link rel="stylesheet" href="./css/app.css" />
+  <link rel="stylesheet" href="./css/control-network.css" />
+  <link rel="stylesheet" href="./css/route.css" />
+  <link rel="stylesheet" href="./css/presentation.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="shell" id="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon">⬡</span><div><strong>BEV DIGITAL TWIN</strong><small><span id="product-mode-title">VEHICLE EXPLORER / HITO 01</span></small></div></div>
+      <div class="mode-switch" aria-label="Módulos del simulador"><button id="tab-explorer" class="mode-tab active" type="button">◈ Vehicle Explorer</button><button id="tab-driving" class="mode-tab" type="button" disabled>◉ Driving Simulator</button><button id="tab-energy" class="mode-tab" type="button" disabled>ϟ Energy Explorer</button><button id="tab-battery" class="mode-tab" type="button" disabled>▰ Battery Explorer</button><button id="tab-charging" class="mode-tab" type="button" disabled>⚡ Recarga</button><button id="tab-thermal" class="mode-tab" type="button" disabled>♨ Térmica</button><button id="tab-charts" class="mode-tab" type="button" disabled>▥ Gráficas</button><button id="tab-control-network" class="mode-tab" type="button" disabled aria-expanded="false" aria-controls="control-network-panel">⌘ Red de control</button><button id="tab-presentation" class="mode-tab" type="button" disabled aria-controls="presentation-panel" aria-expanded="false">∑ Exposición</button></div><div class="topbar-right"><span class="top-chip"><span class="status-dot"></span> ENGINEERING VIEW</span><span class="version-tag">BUILD 5.18.0 · H5.18 · X-RAY</span></div>
+    </header>
+
+    <div class="workspace">
+      <nav class="sidebar" aria-label="Navegación de la aplicación">
+        <div class="side-label">EXPLORADOR</div>
+        <button class="nav-tool active" data-action="reset" title="Vehículo completo"><span>▣</span><small>Vehículo</small></button>
+        <button class="nav-tool" data-action="catalog" title="Buscar componentes"><span>▤</span><small>Piezas</small></button>
+        <div class="nav-separator"></div>
+        <button class="nav-tool" data-action="help" title="Ayuda de navegación"><span>?</span><small>Ayuda</small></button>
+      </nav>
+
+      <main class="viewport-card" aria-label="Visor del vehículo 3D">
+        <div class="view-header">
+          <div><span class="eyebrow">DIGITAL VEHICLE EXPLORER</span><h1>Chevrolet Bolt EV <span>/ 2020</span></h1></div>
+          <div class="scene-status"><span class="status-dot"></span><span id="scene-state">INICIALIZANDO</span></div>
+        </div>
+        <div class="camera-row" aria-label="Vistas de cámara">
+          <div class="camera-row-label">CÁMARAS <span>PREDEFINIDAS</span></div>
+          <div class="cam-buttons">
+            <button class="camera-button active" data-view="iso">3/4</button>
+            <button class="camera-button" data-view="front">Frente</button>
+            <button class="camera-button" data-view="rear">Trasera</button>
+            <button class="camera-button" data-view="left">Izquierda</button>
+            <button class="camera-button" data-view="right">Derecha</button>
+            <button class="camera-button" data-view="top">Superior</button>
+          </div>
+        </div>
+        <div class="stage" id="stage">
+          <canvas id="scene-canvas" aria-label="Modelo 3D interactivo del vehículo"></canvas>
+          <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
+          <div id="loading" class="loading-panel" role="status" aria-live="polite">
+            <span class="loading-spin"></span>
+            <strong id="load-title">Preparando entorno 3D</strong>
+            <span id="load-text">Leyendo el modelo del vehículo…</span>
+            <div class="loading-track"><div id="load-progress"></div></div>
+          </div>
+          <div class="scene-top-left"><span id="explorer-normal" class="pill selected">NORMAL</span><button id="explorer-xray" class="pill xray-toggle" type="button" data-action="xray" aria-pressed="false" title="Explorar componentes internos · tecla X">X-Ray</button><button class="pill energy-entry" id="energy-from-explorer" type="button" title="Abrir visor energético H3">ENERGY · H3 ↗</button></div>
+          <p id="explorer-xray-note" class="explorer-xray-note" hidden>Componentes educativos existentes · motor y reductor integrados · no geometría OEM</p>
+          <div class="view-tools" aria-label="Herramientas del visor">
+            <button data-action="zoom-in" aria-label="Acercar">+</button>
+            <button data-action="zoom-out" aria-label="Alejar">−</button>
+            <button data-action="reset-camera" aria-label="Restaurar cámara">⟲</button>
+          </div>
+          <div class="scene-bottom-left"><span class="axis-dot"></span><span id="camera-readout">CÁMARA · ISOMÉTRICA</span></div>
+          <div class="hint">ARRASTRA PARA ROTAR <span>·</span> RUEDA PARA ZOOM <span>·</span> CLIC PARA INSPECCIONAR</div>
+        </div>
+      </main>
+
+      <aside class="inspector" aria-label="Inspector técnico de componentes">
+        <div class="inspector-head"><span class="eyebrow">COMPONENT INSPECTOR</span><h2>Inspector técnico</h2><p>Selecciona una pieza del vehículo para analizar su función y su ubicación en el modelo.</p></div>
+        <div id="empty-selection" class="empty-selection"><div class="empty-symbol">⌖</div><strong>Ningún componente seleccionado</strong><span>Haz clic sobre el modelo 3D o elige una pieza del catálogo.</span></div>
+        <section class="selected-card hidden" id="selected-panel" aria-live="polite">
+          <span class="eyebrow">COMPONENTE SELECCIONADO</span>
+          <div class="selected-title"><h3 id="selected-title">—</h3><button id="clear-selection" title="Quitar selección">×</button></div>
+          <div class="property"><span>CLASIFICACIÓN</span><strong id="selected-category">—</strong></div>
+          <div class="property"><span>REPRESENTACIÓN</span><strong id="selected-availability">—</strong></div>
+          <p id="selected-description" class="selected-description"></p>
+          <div class="inspector-actions"><button data-action="focus" id="focus-inspector">Enfocar</button><button data-action="isolate" id="isolate-inspector">Aislar</button><button data-action="reset">Restaurar</button></div>
+        </section>
+        <div class="catalog-title"><span>CATÁLOGO DE PIEZAS</span><span id="catalog-count">0</span></div>
+        <input id="catalog-search" class="catalog-search" placeholder="Buscar componente…" aria-label="Buscar componente" />
+        <div id="component-list" class="component-list" aria-label="Lista de componentes"></div>
+        <div class="inspector-foot"><strong>NOTA DE INGENIERÍA</strong><p>El explorador conserva el GLB original. Los componentes 3D energéticos están disponibles en Energy Flow (H3.1) y Battery Explorer (H4).</p></div>
+      </aside>
+    </div>
+
+    <section class="driving-workspace" id="driving-workspace" aria-label="Módulo de simulación de conducción">
+      <main class="drive-main">
+        <div class="drive-scene-card">
+          <div class="drive-stage" id="drive-stage">
+          <output id="drive-destination" class="drive-destination" role="status" aria-live="polite" hidden></output>
+            <div class="drive-cameras" aria-label="Cámaras de conducción"><span>CÁMARAS</span><div><button data-drive-camera="rear" class="active">Seguimiento</button><button data-drive-camera="iso">3/4 trasera</button><button data-drive-camera="side">Lateral</button></div></div>
+            <button id="energy-label-toggle" class="energy-label-control" type="button" aria-pressed="true" title="Mostrar u ocultar las etiquetas 3D">◈ Etiquetas: SÍ</button>
+          <div id="drive-route-strip" class="drive-route-strip" aria-label="Navegación CDMX–Puebla integrada a conducción">
+            <div class="drive-route-map"><b>CDMX → Puebla</b><svg viewBox="0 0 400 65" role="img" aria-label="Puntos verdes permanentes: CDMX, S1, S2, S3 y Puebla"><path d="M20 25 H380" stroke="#64849a" stroke-width="4"/><g class="route-navigation-points" fill="#56d8bd"><circle class="route-dot" cx="20" cy="25" r="5"/><circle class="route-dot" cx="131" cy="25" r="6"/><circle class="route-dot" cx="242" cy="25" r="6"/><circle class="route-dot" cx="325" cy="25" r="6"/><circle class="route-dot" cx="380" cy="25" r="5"/></g><g fill="#d7eaf6" font-size="11" text-anchor="middle"><text x="20" y="52">CDMX</text><text x="131" y="52">S1</text><text x="242" y="52">S2</text><text x="325" y="52">S3</text><text x="380" y="52">Puebla</text></g><circle id="route-car" cx="20" cy="10" r="5" fill="#ffbe67" stroke="#172b3a" stroke-width="2"/></svg></div>
+            <div class="drive-route-readings"><strong id="route-state" hidden>LIBRE</strong><span id="route-progress">0 / 2.600 km</span><span id="route-event" hidden role="status" aria-live="polite"></span><small id="route-storage" hidden></small><span id="route-plan" hidden></span></div>
+            <div id="route-actions" class="drive-route-actions" hidden><select id="route-stations" hidden aria-label="Estación de parada"></select><button id="route-continue" type="button" disabled>Continuar</button></div>
+          </div>
+
+            <div class="drive-hud"><span class="hud-label">VELOCIDAD</span><div><strong id="drive-speed-hud">0</strong><small>km/h</small></div><span id="hud-gradient">CARRETERA PLANA</span></div>
+            <div id="battery-overview" class="battery-overview" hidden><span>BATERÍA HV · H4</span><strong><span id="b-soc-overlay">70.0</span> % SOC</strong><small>THEVENIN 1RC / BMS ACADÉMICO</small></div>
+            <div id="energy-overview" class="energy-overview" hidden><strong id="energy-state">SIN FLUJO</strong><span id="energy-direction">—</span></div>
+            <div id="thermal-legend" class="thermal-legend" hidden aria-label="Escala visual de temperatura del modelo">
+            <strong id="thermal-legend-title">TEMPERATURA CALCULADA · °C</strong><div class="thermal-color-ramp"></div>
+            <div class="thermal-scale-labels"><span>≤−10</span><span>25</span><span>60</span><span>90</span><span>≥120</span></div>
+            <small><i></i> Gris: sin nodo propio · Escala visual, no umbrales BMS</small>
+          </div>
+          <div id="battery-camera-toolbar" class="battery-camera-toolbar" hidden aria-label="Cámaras para inspeccionar la batería">
+              <strong>INSPECCIÓN 3D · BATERÍA</strong>
+              <div class="battery-view-buttons"><button type="button" data-battery-view="iso" class="active">3/4</button><button type="button" data-battery-view="top">Superior</button><button type="button" data-battery-view="side">Lateral</button></div>
+              <button id="battery-context" type="button" aria-pressed="false">◈ Mostrar vehículo</button>
+              <small>Clic en una pieza para consultar su ficha técnica</small>
+            </div>
+            <div class="drive-scene-caption" id="drive-stage-caption">MODELO LONGITUDINAL · REGENERACIÓN CONFIGURABLE H3</div>
+          </div>
+        </div>
+
+      </main>
+
+      <section class="charts-workspace" id="charts-workspace" hidden aria-label="Analítica y gráficas en pantalla amplia">
+        <div class="analytics-heading"><div><span class="eyebrow">TELEMETRÍA · H2 / H3 / H4</span><h2>Centro de gráficas</h2><p>Historial de 60 segundos sincronizado con la simulación física y el BMS.</p></div><div class="analytics-actions"><span class="analytics-run-state" id="analytics-state">PAUSA</span><button id="analytics-play" type="button">▶ Play</button><button id="analytics-pause" type="button">Ⅱ Pausa</button><button id="analytics-reset" type="button">↻ Reset</button><button id="analytics-back" type="button" class="primary">← Volver al visor</button></div></div>
+        <div class="analytics-stats">
+          <div><span>VELOCIDAD</span><strong id="analytics-speed">0.0</strong><small>km/h</small></div>
+          <div><span>SOC</span><strong id="analytics-soc">70.0</strong><small>%</small></div>
+          <div><span>BATERÍA DC</span><strong id="analytics-battery">0.0</strong><small>kW</small></div>
+          <div><span>RECUPERACIÓN</span><strong id="analytics-regen">0.0</strong><small>kW</small></div>
+        </div>
+        <section class="engineering-comparison" aria-label="Análisis de ingeniería A y B">
+          <div class="engineering-heading"><div><span class="eyebrow">ANÁLISIS DE INGENIERÍA</span><h3>Capturas A / B</h3><p>Compara dos instantes del mismo simulador. Diferencia = B − A.</p></div>
+            <div class="engineering-actions"><button id="analysis-capture-a" type="button">Capturar A</button><button id="analysis-capture-b" type="button">Capturar B</button><button id="analysis-clear" type="button">Limpiar</button></div>
+          </div>
+          <p id="analysis-status" class="engineering-status" role="status" aria-live="polite">Captura A y luego B durante conducción o recarga.</p>
+          <div class="engineering-table-wrap"><table class="engineering-table"><thead><tr><th scope="col">Variable</th><th scope="col">A</th><th scope="col">B</th><th scope="col">Δ B − A</th></tr></thead><tbody id="analysis-rows"></tbody></table></div>
+          <small>Potencias instantáneas; energías acumuladas desde RESET. La energía terminal tiene signo + en descarga y − en carga. Entre ejecuciones distintas no se resta energía acumulada.</small>
+        </section>
+        <section class="analytics-feature" aria-label="Gráfica principal expandida">
+          <div class="analytics-feature-head"><div><span class="eyebrow">SEÑAL SELECCIONADA</span><strong id="chart-title">Velocidad (km/h)</strong></div><span id="chart-window-label">VENTANA MÓVIL · 60 s</span></div>
+          <div class="chart-channels" id="chart-channels">
+             <button data-channel="speedKmh" class="active">Velocidad</button><button data-channel="accelerationMS2">Aceleración</button><button data-channel="mechanicalPowerKW">Potencia</button><button data-channel="torqueNm">Par</button><button data-channel="forceTractionN">Fuerza</button><button data-channel="distanceKm">Distancia</button><button data-channel="batteryNetKW">Batería DC</button><button data-channel="regenPowerKW">Regeneración</button><button data-channel="lossPowerKW">Pérdidas</button><button data-channel="energyRecoveredKWh">Energía rec.</button><button data-channel="batterySocPct">SOC</button><button data-channel="batteryVoltageV">Tensión HV</button><button data-channel="batteryCurrentA">Corriente</button><button data-channel="batteryDischargeLimitKW">SOP descarga</button><button data-channel="batteryChargeLimitKW">SOP carga</button><button data-channel="chargeGridKW">Carga red</button><button data-channel="chargeBatteryKW">Carga batería</button><button data-channel="chargeEnergyKWh">Energía red</button><button data-channel="thermalBatteryC">Temp. batería</button><button data-channel="thermalMotorC">Temp. motor</button><button data-channel="thermalElectronicsC">Temp. inversor</button><button data-channel="thermalCoolantC">Refrigerante</button><button data-channel="thermalAuxKW">Aux. térmicos</button>
+          </div>
+          <canvas id="drive-chart" aria-label="Gráfica ampliada de la variable seleccionada"></canvas>
+        </section>
+        <section class="analytics-mini-grid" aria-label="Cuatro gráficas comparativas">
+          <div class="analytics-mini"><strong>Velocidad <small>km/h</small></strong><canvas id="chart-overview-speed" aria-label="Velocidad"></canvas></div>
+          <div class="analytics-mini"><strong>Estado de carga · SOC <small>%</small></strong><canvas id="chart-overview-soc" aria-label="SOC"></canvas></div>
+          <div class="analytics-mini"><strong>Potencia DC de batería <small>kW</small></strong><canvas id="chart-overview-power" aria-label="Potencia de batería"></canvas></div>
+          <div class="analytics-mini"><strong>Regeneración <small>kW</small></strong><canvas id="chart-overview-regen" aria-label="Potencia regenerativa"></canvas></div>
+        </section>
+      </section>
+      <aside class="drive-side" aria-label="Instrumentos y controles de conducción">
+        <div class="drive-side-head"><span class="eyebrow">VEHICLE DYNAMICS</span><strong>Panel de ingeniería</strong><span class="drive-state" id="drive-state">PAUSA</span><p>Modelo educativo · parámetros documentados y supuestos diferenciados.</p></div>
+        <section class="drive-telemetry" aria-label="Variables calculadas">
+          <div class="drive-reading speed-reading"><span>VELOCIDAD</span><strong id="read-speed">0.0</strong><small>km/h</small></div>
+          <div class="drive-reading"><span>ACELERACIÓN</span><strong id="read-accel">0.00</strong><small>m/s²</small></div>
+          <div class="drive-reading"><span>PAR MOTOR</span><strong id="read-torque">0</strong><small>Nm</small></div>
+          <div class="drive-reading"><span>POTENCIA RUEDAS</span><strong id="read-power">0.0</strong><small>kW</small></div>
+          <div class="drive-reading"><span>PENDIENTE</span><strong id="read-grade">0.0</strong><small>%</small></div>
+          <div class="drive-reading"><span>DISTANCIA</span><strong id="read-distance">0.000</strong><small>km</small></div>
+        </section>
+        <section class="powertrain-inspector" id="powertrain-inspector" hidden aria-label="Ficha técnica del componente seleccionado">
+          <div class="pti-header"><div><span class="eyebrow">INSPECTOR 3D · TREN MOTRIZ</span><h2 id="pti-title">Selecciona una pieza</h2></div><button id="pti-close" type="button" aria-label="Cerrar ficha técnica" title="Cerrar ficha">×</button></div>
+          <div class="pti-selectors" aria-label="Seleccionar componente para inspección">
+            <button type="button" data-powertrain-select="battery">Batería</button>
+            <button type="button" data-powertrain-select="pdu">PDU</button>
+            <button type="button" data-powertrain-select="inverter">Inversor</button>
+            <button type="button" data-powertrain-select="motor">Motor</button>
+          </div>
+          <div class="pti-kind" id="pti-kind">—</div>
+          <p class="pti-description" id="pti-description"></p>
+          <div class="pti-subheading">DATOS DE REFERENCIA / MODELO</div>
+          <dl class="pti-facts" id="pti-facts"></dl>
+          <div class="pti-subheading">VARIABLES EN TIEMPO REAL</div>
+          <dl class="pti-metrics" id="pti-metrics"></dl>
+          <div class="pti-source" id="pti-source"></div>
+          <small class="pti-hint">Clic directamente en un componente 3D o usa los botones superiores. Los módulos didácticos se pueden seleccionar al desplegarlos.</small>
+        </section>
+        <section class="h5-panel h5-charging-panel" id="charging-panel" hidden aria-label="Charging Simulator">
+          <p id="h5-charging-visual-status" class="h5-explain" role="status">Escena 3D disponible al abrir Recarga.</p>
+          <div class="h5-title"><span class="eyebrow">HITO 05 · RECARGA AC/DC</span><h2>Charging Simulator</h2><span class="h5-state" id="charge-state">DESCONECTADO</span></div>
+          <div class="h5-soc"><div><small>SOC REAL · BMS</small><strong id="charge-soc">70.0 %</strong></div><div><small>POTENCIA RED</small><strong id="charge-grid">0.0 kW</strong></div></div>
+          <div class="battery-soc-track"><div id="charge-soc-fill" style="width:70%"></div></div>
+          <div class="h5-field"><label for="charge-station">Equipo / conexión</label><select id="charge-station"><option value="ac120">AC doméstica · 120 V / 12 A · J1772</option><option value="ac240" selected>AC nivel 2 · 240 V / 32 A · J1772</option><option value="dc50">DC rápida · 50 kW · CCS1</option><option value="dc100">DC pública · 100 kW · CCS1 (limitada por vehículo)</option></select></div>
+          <section class="h5-compatibility" aria-label="Compatibilidad y límites de recarga">
+            <div class="h5-compat-heading"><strong>COMPATIBILIDAD · BOLT EV</strong><span id="charge-compat-status">EVALUANDO</span></div>
+            <p id="charge-compat-reason"></p>
+            <p id="charge-compat-path" class="h5-compat-path"></p>
+            <div class="h5-compat-output"><span>TOPE DC ESTIMADO <b id="charge-compat-ceiling">—</b></span><span>LIMITADO POR <b id="charge-compat-limiter">—</b></span><span>NETO A BATERÍA <b id="charge-compat-net">—</b></span></div>
+            <details><summary>Ver límites por componente</summary>
+              <dl class="h5-compat-limits" id="charge-compat-limits"></dl>
+              <p id="charge-compat-bms" class="h5-compat-bms"></p>
+              <small>Estimación instantánea antes de la sesión; el BMS y la recarga H5 calculan la potencia real. Los límites son supuestos académicos, no datos OEM ni validación del protocolo.</small>
+            </details>
+          </section>
+          <div class="h5-field"><label for="charge-target">SOC objetivo <output id="charge-target-value">80 %</output></label><input id="charge-target" type="range" min="15" max="95" value="80" step="1"></div>
+          <div class="h5-button-grid"><button id="charge-connect">① Conectar</button><button id="charge-verify">② Verificar</button><button id="charge-start" class="h5-primary">▶ Iniciar</button><button id="charge-pause">Ⅱ Pausar</button><button id="charge-stop">■ Detener</button><button id="charge-disconnect">⑥ Desconectar</button></div>
+          <div class="h5-metrics"><div><small>POTENCIA DC VEHÍCULO</small><b id="charge-dc">0.0 kW</b></div><div><small>POTENCIA NETA BATERÍA</small><b id="charge-net">0.0 kW</b></div><div><small>TENSIÓN / CORRIENTE</small><b id="charge-vi">--</b></div><div><small>TEMPERATURA</small><b id="charge-temp">-- °C</b></div><div><small>TIEMPO / ETA INSTANTÁNEA</small><b id="charge-time">0 min</b><small id="charge-eta">ETA: --</small></div><div><small>RED / BATERÍA</small><b id="charge-energy">0 / 0 kWh</b></div></div>
+          <div class="h5-field"><label for="charge-speed">Avance temporal <output id="charge-speed-value">×120</output></label><select id="charge-speed"><option value="1">×1 · tiempo real</option><option value="30">×30</option><option value="120" selected>×120 · recomendado</option><option value="300">×300 · rápido</option></select></div>
+          <p class="h5-message" id="charge-message" aria-live="polite">Conecta un equipo para iniciar.</p>
+          <small class="h5-disclaimer">Carcasas 3D externas adaptadas; puerto y conectores educativos J1772 / CCS1, sin protocolo PLC real. OBC, curva de potencia, pérdidas y límites parametrizados. Conexión 3D ilustrativa; batería y SOC utilizan el BMS real del simulador.</small>
+        </section>
+        <section class="h5-panel h5-thermal-panel" id="thermal-panel" hidden aria-label="Thermal Management Explorer">
+          <p id="h5-thermal-visual-status" class="h5-explain" role="status">Visor compartido con Energy: conducción y temperaturas en tiempo real.</p>
+          <div class="h5-title"><span class="eyebrow">HITO 05 · TRES CIRCUITOS</span><h2>Thermal Explorer</h2><span class="h5-state" id="thermal-state">AUTO</span></div>
+          <p class="h5-explain">Tres redes térmicas conceptuales independientes: batería, electrónica de potencia y calefacción del habitáculo. Con pérdidas físicas acopladas al BMS.</p>
+          <div class="h5-metrics"><div><small>BATERÍA</small><b id="thermal-battery">-- °C</b></div><div><small>REFRIGERANTE HV</small><b id="thermal-coolant">-- °C</b></div><div><small>MOTOR</small><b id="thermal-motor">-- °C</b></div><div><small>INVERSOR / OBC</small><b id="thermal-inverter">-- °C</b></div><div><small>REFRIGERANTE POTENCIA</small><b id="thermal-power-coolant">-- °C</b></div><div><small>AUX. TÉRMICOS</small><b id="thermal-aux">0 W</b></div></div>
+          <div class="h5-field"><label for="thermal-ambient">Ambiente <output id="thermal-ambient-value">25 °C</output></label><input id="thermal-ambient" type="range" min="-15" max="50" step="1" value="25"></div>
+          <div class="h5-field"><label for="thermal-control">Control térmico</label><select id="thermal-control"><option value="AUTO">AUTO · climatización disponible</option><option value="ECO">ECO · enfriamiento moderado</option><option value="OFF">OFF · sin actuadores</option></select></div>
+          <div class="h5-button-grid h5-presets"><button data-thermal-preset="normal">Normal 25 °C</button><button data-thermal-preset="cold">Frío −8 °C</button><button data-thermal-preset="hot">Calor 48 °C</button></div>
+          <div class="h5-button-grid" aria-label="Vistas de detalle térmico"><button type="button" data-h5-detail="pump">◎ Bomba</button><button type="button" data-h5-detail="radiator">◎ Radiador / ventilador</button><button type="button" data-h5-detail="plates">◎ Placas de batería</button></div>
+          <div class="h5-button-grid"><button id="thermal-run" class="h5-primary">▶ Simular conducción</button><button id="thermal-pause">Ⅱ Pausar</button><button id="thermal-focus">◎ Ver todos</button><button id="thermal-labels">◈ Etiquetas: SÍ</button></div>
+          <div class="h5-actuators" id="thermal-actuators">Bomba batería: -- · Bomba electrónica: -- · Chiller: -- · Calentador: -- · Ventilador: --</div>
+          <div class="h5-component-list" aria-label="Inspector térmico">
+            <button data-thermal-inspect="battery">▰ Batería HV</button><button data-thermal-inspect="coolant">◈ Circuito HV</button><button data-thermal-inspect="motor">⚙ Motor</button><button data-thermal-inspect="inverter">ϟ Inversor</button><button data-thermal-inspect="cabin">♨ Habitáculo</button>
+          </div>
+          <div class="h5-component-list"><button data-thermal-inspect="powerCoolant">◈ Refrigerante potencia</button><button data-thermal-inspect="pdu">ϟ PDU · sin nodo propio</button></div>
+          <div class="h5-button-grid"><button data-thermal-action="focus" type="button">Enfocar selección</button><button data-thermal-action="isolate" type="button" aria-pressed="false">Aislar componente</button><button data-thermal-action="restore" type="button">Restaurar visibilidad</button><button data-thermal-action="color" type="button" aria-pressed="true">Color térmico: SÍ</button></div>
+          <div id="thermal-inspector" class="h5-message" aria-live="polite">Selecciona un circuito o componente para consultar su funcionamiento.</div>
+          <small class="h5-disclaimer">Capacidades térmicas, intercambiadores y umbrales: HIPÓTESIS ACADÉMICAS, no geometría ni calibración térmica original de General Motors.</small>
+        </section>
+        <section class="energy-panel" id="energy-panel" hidden aria-label="Balance energético del tren motriz">
+          <div class="energy-heading"><strong>ENERGY MONITOR</strong><span>HITO 03 · MODELO ACADÉMICO</span></div>
+          <div class="energy-assets-heading"><strong>COMPONENTES 3D ADAPTADOS</strong><span id="energy-assets-status">Se cargarán al abrir ENERGY</span></div>
+          <div class="energy-parts" aria-label="Inspección de componentes 3D">
+            <button type="button" data-energy-part="battery">▰ Batería HV</button>
+            <button type="button" data-energy-part="pdu">⬡ PDU</button>
+            <button type="button" data-energy-part="inverter">ϟ Inversor</button>
+            <button type="button" data-energy-part="motor">⚙ Unidad motriz</button>
+            <button type="button" id="energy-focus-all">⤢ Vista completa</button>
+          </div>
+          <div id="energy-part-description" class="energy-part-description">Selecciona un componente para enfocarlo. Modelos visuales no OEM.</div>
+          <div class="flow-chain" id="energy-flow-chain" data-flow="none"><span>BATERÍA</span><b>⇄</b><span>INVERSOR</span><b>⇄</b><span>PMSM</span><b>⇄</b><span>RUEDAS</span></div>
+          <div class="energy-grid">
+             <div><span>BATERÍA DC NETA</span><strong id="e-battery">0</strong><small>kW ±</small></div>
+             <div><span>MOTOR / GENERADOR</span><strong id="e-motor">0</strong><small>kW ±</small></div>
+             <div><span>RUEDAS</span><strong id="e-wheels">0</strong><small>kW ±</small></div>
+             <div><span>PÉRDIDAS TOTALES</span><strong id="e-loss">0</strong><small>kW</small></div>
+             <div><span>REGENERACIÓN DC</span><strong id="e-rec">0</strong><small>kW</small></div>
+             <div><span>ERROR DE BALANCE</span><strong id="e-balance">0</strong><small>W</small></div>
+          </div>
+          <div class="energy-accumulators"><span>Tracción DC <b id="e-used-kwh">0</b> kWh</span><span>Recuperada <b id="e-rec-kwh">0</b> kWh</span><span>Auxiliares <b id="e-aux-kwh">0</b> kWh</span></div>
+          <div class="energy-brakes">Frenado: <span id="e-brake-r">0</span> N regenerativo · <span id="e-brake-f">0</span> N fricción</div>
+          <small class="energy-disclaimer">Potencias agregadas con eficiencias supuestas; límites eléctricos y SOC del HITO 4 (BMS académico). Modelos 3D externos modificados y escalados de forma educativa; no son piezas OEM Chevrolet Bolt. Consulta ATTRIBUTION_MODELS.md.</small>
+        </section>
+        <section class="battery-panel" id="battery-panel" hidden aria-label="Battery Explorer y BMS">
+          <div class="battery-head"><div><span class="eyebrow">BATTERY & ENERGY STORAGE / H4</span><h2>Battery Explorer</h2></div><span id="b-bms-status" class="bms-state" data-state="NORMAL">NORMAL</span></div>
+          <div class="battery-soc-card">
+            <div class="battery-soc-label"><span>ESTADO DE CARGA — SOC</span><strong><span id="b-soc">70.0</span> %</strong></div>
+            <div class="battery-soc-track"><div id="b-soc-fill" style="width:70%"></div></div>
+            <div class="battery-alert" id="b-warning">OPERACIÓN NORMAL</div>
+          </div>
+          <div class="battery-stats">
+            <div><span>TENSIÓN TERMINAL</span><strong id="b-voltage">--</strong><small>V</small></div>
+            <div><span>CORRIENTE (+ DESCARGA)</span><strong id="b-current">--</strong><small>A</small></div>
+            <div><span>POTENCIA BATERÍA</span><strong id="b-power">--</strong><small>kW</small></div>
+            <div><span>PÉRDIDAS INTERNAS</span><strong id="b-heat">--</strong><small>kW</small></div>
+            <div><span>SOP · DESCARGA</span><strong id="b-discharge-limit">--</strong><small>kW</small></div>
+            <div><span>SOP · CARGA</span><strong id="b-charge-limit">--</strong><small>kW</small></div>
+            <div><span>OCV</span><strong id="b-ocv">--</strong><small>V</small></div>
+            <div><span>POLARIZACIÓN RC</span><strong id="b-polarization">--</strong><small>V</small></div>
+            <div><span>TEMPERATURA BATERÍA</span><strong id="b-temperature">25</strong><small>°C</small></div>
+            <div><span>ENERGÍA NETA SALIDA</span><strong id="b-energy">0</strong><small>kWh</small></div>
+          </div>
+          <div class="battery-validation">Residual balance eléctrico: <b id="b-balance">0.000000</b> W</div>
+          <div class="battery-settings">
+            <strong>CONFIGURACIÓN DE ENSAYO</strong>
+            <label for="bms-initial-soc">SOC inicial <output id="bms-soc-setting">70 %</output></label>
+            <input id="bms-initial-soc" type="range" min="0" max="100" step="1" value="70"/>
+            <label for="bms-initial-temp">Temperatura inicial <output id="bms-temp-setting">25 °C</output></label>
+            <input id="bms-initial-temp" type="range" min="-20" max="65" step="1" value="25"/>
+            <div class="battery-presets"><button type="button" data-battery-preset="normal">Normal 70%</button><button type="button" data-battery-preset="low">SOC bajo 7%</button><button type="button" data-battery-preset="high">SOC alto 94%</button></div>
+            <button id="battery-apply" type="button">↻ Aplicar condiciones y reiniciar</button>
+            <button id="battery-focus" type="button">◎ Enfocar batería 3D</button>
+            <button id="battery-modules" type="button" aria-pressed="false">▤ Mostrar módulos didácticos</button>
+          </div>
+          <small class="battery-disclaimer">66 kWh y 288 celdas: referencia Bolt 2020. Curva OCV, resistencia, Ah, umbrales y límites BMS: HIPÓTESIS ACADÉMICAS, NO CALIBRACIÓN OEM. Temperatura dinámica con control térmico educativo H5. El SOC es calculado, no medido.</small>
+        </section>
+        <section class="drive-control-panel">
+          <div class="run-buttons"><button id="route-start" type="button" disabled>Viaje CDMX–Puebla</button><button id="drive-play" class="drive-primary">▶ PLAY</button><button id="drive-pause">Ⅱ PAUSE</button><button id="drive-reset">↻ RESET</button></div>
+          <div class="drive-range"><label for="drive-throttle">Acelerador <output id="throttle-value">0 %</output></label><input type="range" id="drive-throttle" min="0" max="100" value="0" step="1"/></div>
+          <div class="drive-range"><label for="drive-brake">Freno (regenerativo + fricción) <output id="brake-value">0 %</output></label><input type="range" id="drive-brake" min="0" max="100" value="0" step="1"/></div>
+          <div class="scenario-row"><label for="regen-mode">Regeneración H3</label><select id="regen-mode"><option value="off">Desactivada · H2</option><option value="low">Baja · 35 %</option><option value="standard" selected>Estándar · dentro de límites</option></select></div>
+          <div class="scenario-row"><label for="visual-landscape">Paisaje exterior</label><select id="visual-landscape"><option value="mountain">Montaña</option><option value="sky">Cielo abierto</option></select></div>
+          <small id="visual-assets-status" role="status">Preparando entorno visual…</small>
+          <div class="scenario-row"><label for="drive-scenario">Escenario</label><select id="drive-scenario"><option value="route">Viaje CDMX–Puebla · educativo</option><option value="flat" selected>Carretera plana</option><option value="up">Subida +6 %</option><option value="down">Bajada −6 %</option><option value="profile">Perfil variable académico</option><option value="manual">Pendiente manual</option></select></div>
+          <div class="drive-range"><label for="drive-grade">Pendiente manual <output id="grade-value">0.0 %</output></label><input id="drive-grade" type="range" min="-12" max="12" value="0" step=".5" disabled/></div>
+          <div class="drive-range"><label for="drive-payload">Carga adicional de referencia <output id="payload-value">141 kg</output></label><input id="drive-payload" type="range" min="0" max="500" value="141" step="1"/></div>
+        </section>
+        <div class="drive-note"><strong>HIPÓTESIS DEL MODELO</strong><p><b>150 kW · 360 Nm · i = 7.05</b>: datos de referencia. Cd, área frontal, adherencia, eficiencias, radio dinámico y cargas: <b>supuestos editables de ingeniería</b>. H4: Thevenin 1RC, SOC y BMS académicos; sin calibración OEM. Gestión térmica agregada H5.</p><small>ATAJOS: W / ↑ acelerador · S / ↓ freno y marcha atrás en ruta · A / ← izquierda · D / → derecha · ESPACIO play/pausa · 0 reset</small></div>
+      </aside>
+    </section>
+
+    <footer class="statusbar"><span><span class="mini-led"></span><span id="global-status">Esperando escena 3D</span></span><span>GLB · ORIGINAL <span class="footer-divider">|</span> <span id="footer-module">INTERFAZ VISUAL H1</span> <span class="footer-divider">|</span> <span id="footer-physics">FÍSICA: NO ACTIVADA</span></span><button id="keyboard-help">ATAJOS ↗</button></footer>
+  </div>
+  <section id="control-network-panel" class="cn-panel" hidden aria-labelledby="cn-title">
+    <header class="cn-header"><div><span class="eyebrow">BEV · LECTURA DEL MODELO</span><h2 id="cn-title">Red de control educativa</h2></div><button id="cn-close" type="button" aria-label="Cerrar red de control">Cerrar ×</button></header>
+    <p class="cn-note">Las flechas son relaciones ilustrativas, no tramas transmitidas. No se implementan CAN, PWM ni PLC, ni una red OEM del Bolt.</p>
+    <div class="cn-legend"><span><i class="cn-dashed"></i>Mensaje ilustrativo · variables del modelo</span><span><i class="cn-solid"></i>Protocolo real · referencia documental</span></div>
+    <div class="cn-live"><strong id="cn-mode">ESTADO DEL MODELO</strong><span id="cn-time"></span></div>
+    <svg id="control-network-svg" viewBox="0 0 700 325" role="group" aria-label="Cinco módulos de control BEV. Selecciona un módulo para inspeccionarlo."><defs><marker id="cn-arrow" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6" fill="#b7a2ff"/></marker></defs></svg>
+    <section class="cn-inspector"><h3 id="cn-inspector-title">VCU</h3><p id="cn-role"></p><dl><dt>Entradas</dt><dd id="cn-inputs"></dd><dt>Salidas</dt><dd id="cn-outputs"></dd></dl><p><b>Actuadores térmicos:</b> <span id="cn-actuators"></span></p></section>
+    <details open><summary>Mensajes ilustrativos y origen de cada lectura</summary><div class="cn-table-wrap"><table><thead><tr><th>Relación</th><th>Señal ilustrativa</th><th>Valor</th><th>Variable existente</th></tr></thead><tbody id="cn-messages"></tbody></table></div></details>
+    <section class="cn-reference"><h3>Protocolos reales · referencia, sin tráfico real</h3><p>Línea continua verde: familias estandarizadas. El resaltado indica el equipo AC/DC seleccionado, no una negociación activa.</p><ul id="cn-protocols"></ul><small>La arquitectura física, IDs CAN, DBC, tasas de mensajes, contactores y negociación del Bolt no están verificados. No se calcula ocupación del bus ni latencia de red.</small></section>
+  </section>
+  <dialog id="help-dialog"><div class="dialog-inner"><div class="dialog-header"><h2>Controles del explorador</h2><button id="close-help" aria-label="Cerrar">×</button></div><p>Gira el vehículo con el ratón, acerca con la rueda y selecciona piezas con un clic. El resaltado y el aislamiento son funciones visuales.</p><div class="shortcut-grid"><span>Ratón izquierdo + arrastre</span><strong>Rotar</strong><span>Rueda</span><strong>Zoom</strong><span>1 / 2 / 3 / 4 / 5 / 6</span><strong>Cambiar cámara</strong><span>F</span><strong>Enfocar componente</strong><span>I</span><strong>Aislar / restaurar</strong><span>ESC</span><strong>Restaurar vehículo</strong><span>R</span><strong>Restaurar cámara</strong></div><button id="ok-help" class="primary-button">Entendido</button></div></dialog>
+  <script>
+    // Un error de conexión con la CDN puede impedir que arranque incluso el módulo principal.
+    setTimeout(()=>{
+      if(window.__bevBootStarted)return;
+      const title=document.getElementById('load-title'),text=document.getElementById('load-text');
+      if(title&&text){title.textContent='No se pudo cargar Three.js';text.textContent='Este prototipo necesita Internet para descargar Three.js. Comprueba la conexión y vuelve a cargar.';}
+    },16000);
+  </script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
